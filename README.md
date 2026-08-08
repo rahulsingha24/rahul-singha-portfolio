@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+A personal portfolio site built as an extension of my resume, focused on clear
+presentation of my projects and experience. Recruiter-first: fast to scan, fast
+to load, and designed so animation never gets in the way of reading.
 
-First, run the development server:
+**Live:** [rahul-singha-portfolio.vercel.app](https://rahul-singha-portfolio.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tech stack
+
+| | |
+| --- | --- |
+| Framework | Next.js (App Router, static export) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Icons | lucide-react |
+| Analytics | Vercel Analytics |
+| Hosting | Vercel |
+
+No animation library — every transition is CSS or a small
+`IntersectionObserver`.
+
+## Updating the content
+
+All content lives in `/data`. Nothing in `/components` needs editing to change
+what the site says.
+
+| File | Holds |
+| --- | --- |
+| `data/profile.ts` | Name, title, contact details, About text, links |
+| `data/skills.ts` | Technical skills by category |
+| `data/projects.ts` | Project entries |
+| `data/hackathons.ts` | Hackathon entries |
+| `data/education.ts` | Education history |
+| `data/certifications.ts` | Certifications |
+| `data/types.ts` | The shape of every entry above |
+
+To add a project, copy an existing object in `projects.ts` and change the
+values. `types.ts` will flag a missing or misspelled field before it reaches
+the browser.
+
+Every section renders only if its data file has content. Empty an array and
+both the section and its navigation link disappear — no placeholder, no empty
+heading.
+
+## Project structure
+
+```
+app/
+  layout.tsx        fonts, metadata, JSON-LD
+  page.tsx          lists the sections in order
+  globals.css       design tokens: colours, fonts, motion
+components/
+  Nav.tsx           sticky bar with scroll-spy
+  Footer.tsx
+  sections/         one file per resume section
+  ui/               shared pieces used by more than one section
+data/               all content (see above)
+public/             resume PDF and static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Running locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Opens on http://localhost:3000.
 
-## Learn More
+```bash
+npm run build    # production build
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Design tokens** are defined once in the `@theme` block of
+  `app/globals.css`. Changing `--color-signal` there recolours every accent on
+  the site.
+- **Accessibility**: semantic sections with `aria-labelledby`, a skip link,
+  visible focus rings, and a global `prefers-reduced-motion` rule that disables
+  all motion without hiding any content.
+- **SEO**: metadata and `Person` structured data are generated from
+  `data/profile.ts`, so they can never drift from what the page says.

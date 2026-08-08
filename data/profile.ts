@@ -11,7 +11,7 @@ export const profile: Profile = {
   name: "Rahul Singha",
 
   // Shown directly under your name. Keep it short.
-  title: "Computer Science Student",
+  title: "Computer Science Student · Android & Web",
 
   location: "Bankura, West Bengal, India",
   email: "singharahul2005@gmail.com",
@@ -28,15 +28,15 @@ export const profile: Profile = {
   // One line shown in the Contact section. Say what you're actually
   // looking for. Delete this line to hide it.
   contactNote:
-    "Open to software engineering internship opportunities.",
+    "If you've read this far, the fastest way to reach me is email.",
 
   githubUrl: "https://github.com/rahulsingha24",
   linkedinUrl: "https://www.linkedin.com/in/rahulsingha-cse/",
 
-  // Your live site address. Update this after your first Vercel deploy.
-  siteUrl: "https://rahul-singha-site.vercel.app",
+ // Your live site address. Update this after your first Vercel deploy.
+  siteUrl: "https://rahul-singha-portfolio.vercel.app",
 
   // Put your PDF at /public/resume.pdf. Delete this line to hide the
   // download button entirely.
-  resumePath: "/resume.pdf",
+  resumePath: "/Rahul_Singha_Resume.pdf",
 };

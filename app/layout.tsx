@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Source_Sans_3, IBM_Plex_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { profile } from "@/data/profile";
 import "./globals.css";
 
@@ -101,6 +102,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
         />
+
+        {/* Vercel Analytics. Counts page views only - no cookies, no
+            cross-site tracking, nothing that needs a consent banner.
+            Delete this line and the import above to remove it. */}
+        <Analytics />
       </body>
     </html>
   );
