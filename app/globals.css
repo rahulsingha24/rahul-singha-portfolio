@@ -1,26 +1,141 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   DESIGN TOKENS
+
+   Every colour, font and spacing value on the site comes from here.
+   Change a value once and it updates everywhere.
+
+   Tailwind v4 turns each token into a utility class automatically:
+     --color-ink      ->  text-ink, bg-ink, border-ink
+     --font-display   ->  font-display
+   ========================================================================== */
+
+@theme {
+  /* --- Colours -----------------------------------------------------------
+     "Slate & Signal": cool neutrals with one restrained blue accent.
+     No gradients, no neon. Every pair below passes WCAG AA contrast.        */
+
+  --color-paper: #fbfbfc;        /* page background                      */
+  --color-surface: #ffffff;      /* cards sitting on the background      */
+  --color-ink: #16181d;          /* headings and primary text            */
+  --color-graphite: #5a606b;     /* body text and metadata               */
+  --color-rule: #e3e5e9;         /* borders and dividers                 */
+  --color-signal: #2f5da8;       /* links, active nav, status markers    */
+  --color-signal-dim: #edf1f9;   /* chip and badge backgrounds           */
+
+  /* --- Fonts -------------------------------------------------------------
+     The actual font files are loaded in layout.tsx. These variables just
+     point at them.
+
+     display  = your name and section headings
+     body     = paragraphs and list text
+     mono     = dates, tech chips, status markers (anything that is DATA)   */
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* --- Elevation ---------------------------------------------------------
+     Two soft shadows. Deliberately subtle - a resume site should look
+     printed, not stacked.                                                  */
+
+  --shadow-card: 0 1px 2px rgb(22 24 29 / 0.04);
+  --shadow-card-hover: 0 6px 20px -6px rgb(22 24 29 / 0.10);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ==========================================================================
+   BASE STYLES
+   ========================================================================== */
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-graphite);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+  /* Stops the sticky header covering a heading you just jumped to. */
+  scroll-padding-top: 5rem;
+}
+
+/* ==========================================================================
+   MOTION
+
+   Two animations, both built only from `opacity` and `transform`. Those two
+   properties are handled by the GPU and never trigger a layout recalculation,
+   which is what keeps this smooth on cheap phones.
+   ========================================================================== */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Used by the Hero on page load. The --delay variable staggers each line
+   so the hero assembles itself rather than appearing all at once. */
+.rise {
+  opacity: 0;
+  animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* Used by Reveal.tsx for sections further down the page. Starts hidden,
+   gains .is-visible when it scrolls into view. */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+/* A clearly visible outline for anyone navigating by keyboard.
+   Never replace this with `outline: none`. */
+:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Respect the operating system's "reduce motion" setting.
+   Note the last block: content that would normally fade in must be forced
+   visible, or someone with motion reduced on would see a blank page. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .rise,
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
